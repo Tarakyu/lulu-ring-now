@@ -1,10 +1,10 @@
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyCU7Z37g9WcrJ4K5PlhmAqOVpBPqf7yMyA",
+  authDomain: "lulu-ring-now.firebaseapp.com",
+  projectId: "lulu-ring-now",
+  storageBucket: "lulu-ring-now.firebasestorage.app",
+  messagingSenderId: "833308441768",
+  appId: "1:833308441768:web:766f8317a8a31f3d87d69d"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
