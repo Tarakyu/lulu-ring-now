@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>루루 링번개 현황</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .game-card {
+            background-color: #222;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            text-align: left;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: orange;
+        }
+        .info {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        .join-btn {
+            display: block;
+            width: 100%;
+            background-color: orange;
+            color: black;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+    </style>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('https://api.pokerlulu.com/api/clans/8/games?page=1&limit=10', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1MiIsInVzZXJHYW1lSWQiOiI1MiIsImV4cGlyZWRBdCI6MTc0MjgwMzExMDAwMCwiaWF0IjoxNzQyMTk4MzE5LCJleHAiOjE3NDI4MDMxMTl9.-Cl2igc0GV5h-6Yq44UZ6IU0vO8h2crg_P5Hqiy4gKc'
+                }
+            })
+            .then(response => {
+                if (response.status === 401) {
+                    document.querySelector(".container").innerHTML = '<p style="font-size: 40px; color: red;">인증이 만료됐으니 업데이트좀 하라고 말해주세요..</p>';
+                    throw new Error("Unauthorized");
+                }
+                return response.json();
+            })
+            .then(data => {
+                const container = document.querySelector(".container");
+                container.innerHTML = "";
+                const games = data.data.res.filter(game => game.gameState === "playing" || game.gameState === "prepare");
+                if (games.length === 0) {
+                    container.innerHTML = '<p style="font-size: 40px; color: orange;">진행중인 링번개가 없어요 ㅜㅜ</p>';
+                    return;
+                }
+                games.forEach(game => {
+                    const gameElement = `<div class="game-card">
+                        <div class="title">${game.title}</div>
+                        <div class="info">시작시간: ${new Date(game.createdAt).toLocaleString("ko-KR")}</div>
+                        <div class="info">블라인드: ${game.smallBlind}/${game.bigBlind}</div>
+                        <div class="info">플레이어: ${game.activePlayerCount}/${game.maxPlayerCount}</div>
+                        <div class="info">방장: ${game.ownerUserName}</div>
+                        <a class="join-btn" href="https://pokerlulu.com/ko?gameId=${game.gameId}" target="_blank">입장하기</a>
+                    </div>`;
+                    container.innerHTML += gameElement;
+                });
+            })
+            .catch(error => console.error('API 요청 실패:', error));
+        });
+    </script>
+</head>
+<body>
+    <h1>루루 링번개 현황</h1>
+    <div class="container">
+        <p style="font-size: 20px; color: orange;">데이터 로딩 중...</p>
+    </div>
+</body>
+</html>
